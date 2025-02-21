@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "750603662813",
+    "project_id": "virtualcourse-flutter",
+    "storage_bucket": "virtualcourse-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750603662813:android:87949e7d63f0fc45fe7234",
+        "android_client_info": {
+          "package_name": "com.mrblab.prime_lms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "750603662813-t4612ueu4pi1jp925c0ncu0sdijj4vf7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mrblab.prime_lms",
+            "certificate_hash": "03145446c9dc3c4c6d8ec68cdcae8a096410b0a2"
+          }
+        },
+        {
+          "client_id": "750603662813-99u4i9bhubno99hi8f445856b3dft1no.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNamE1RvW9kHLW0NO53Z6ip12FtbsYp-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "750603662813-99u4i9bhubno99hi8f445856b3dft1no.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
