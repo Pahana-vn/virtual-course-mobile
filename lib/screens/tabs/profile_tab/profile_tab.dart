@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/api_user_provider.dart';
-import '../../../models/api_user_model.dart';
 import 'api_user_info.dart';
 import 'guest_user.dart';
-import 'user_info.dart';
 import 'settings.dart';
 
 class ProfileTab extends ConsumerWidget {
@@ -28,8 +26,8 @@ class ProfileTab extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 user != null
-                    ? ApiUserInfo(user: user) // Hiển thị user info nếu có
-                    : const GuestUser(), // Nếu user chưa load, hiển thị login
+                    ? ApiUserInfo(user: user)
+                    : const GuestUser(),
                 const AppSettings(),
               ],
             ),

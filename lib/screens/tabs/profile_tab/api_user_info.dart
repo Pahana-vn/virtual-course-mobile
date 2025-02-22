@@ -24,8 +24,8 @@ class ApiUserInfo extends StatelessWidget {
             radius: 50,
             backgroundImage: NetworkImage(
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbSbfQH0ngGM1xnavF0vZOaHdv8Cvc2FP4Wg&s",
-            ), // Luôn sử dụng ảnh mặc định
-            backgroundColor: Colors.grey[400], // Màu nền nếu ảnh bị lỗi
+            ),
+            backgroundColor: Colors.grey[400],
           ),
           trailing: const Icon(Icons.edit),
         ),

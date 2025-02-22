@@ -16,7 +16,7 @@ import '../../../components/languages.dart';
 import '../../../services/app_service.dart';
 import '../../../services/notification_service.dart';
 import '../../../theme/theme_provider.dart';
-import '../../../utils/api_next_screen.dart'; // ✅ Import điều hướng
+import '../../../utils/api_next_screen.dart';
 
 class AppSettings extends ConsumerWidget with UserMixin {
   const AppSettings({super.key});
@@ -68,13 +68,13 @@ class AppSettings extends ConsumerWidget with UserMixin {
             ],
           ),
         ),
-        const Divider(),
-        ListTile(
-          title: const Text('privacy-policy').tr(),
-          leading: const Icon(LineIcons.lock),
-          trailing: const Icon(FeatherIcons.chevronRight),
-          onTap: () => AppService().openLinkWithCustomTab(setttings?.privacyUrl ?? ''),
-        ),
+        // const Divider(),
+        // ListTile(
+        //   title: const Text('privacy-policy').tr(),
+        //   leading: const Icon(LineIcons.lock),
+        //   trailing: const Icon(FeatherIcons.chevronRight),
+        //   onTap: () => AppService().openLinkWithCustomTab(setttings?.privacyUrl ?? ''),
+        // ),
         const Divider(),
         ListTile(
           title: const Text('contact-us').tr(),
@@ -82,43 +82,35 @@ class AppSettings extends ConsumerWidget with UserMixin {
           trailing: const Icon(FeatherIcons.chevronRight),
           onTap: () => AppService().openEmailSupport(setttings?.supportEmail ?? ''),
         ),
+        // const Divider(),
+        // ListTile(
+        //   title: const Text('rate-app').tr(),
+        //   leading: const Icon(LineIcons.star),
+        //   trailing: const Icon(FeatherIcons.chevronRight),
+        //   onTap: () => AppService().launchAppReview(context),
+        // ),
         const Divider(),
         ListTile(
-          title: const Text('rate-app').tr(),
-          leading: const Icon(LineIcons.star),
+          title: const Text('account-control').tr(),
+          leading: const Icon(LineIcons.userCog),
           trailing: const Icon(FeatherIcons.chevronRight),
-          onTap: () => AppService().launchAppReview(context),
+          onTap: () => ApiNextScreen.replace(context, const DeleteAccount()),
         ),
-        Visibility(
-          visible: user != null,
-          child: Column(
-            children: [
-              const Divider(),
-              ListTile(
-                title: const Text('account-control').tr(),
-                leading: const Icon(LineIcons.userCog),
-                trailing: const Icon(FeatherIcons.chevronRight),
-                onTap: () => ApiNextScreen.replace(context, const DeleteAccount()),
-              ),
-              const Divider(),
-
-              // ✅ Nút Logout
-              ListTile(
-                title: const Text('logout').tr(),
-                leading: const Icon(FeatherIcons.logOut, color: Colors.red),
-                trailing: const Icon(FeatherIcons.chevronRight),
+        const Divider(),
+        ListTile(
+          title: const Text('logout').tr(),
+          leading: const Icon(FeatherIcons.logOut),
+          trailing: const Icon(FeatherIcons.chevronRight),
                 onTap: () => openLogoutDialog(context),
               ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 50, bottom: 20),
-          child: const Text(
-            'social',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ).tr(),
-        ),
+
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 50, bottom: 20),
+        //   child: const Text(
+        //     'social',
+        //     style: TextStyle(fontWeight: FontWeight.bold),
+        //   ).tr(),
+        // ),
         Visibility(
           visible: setttings?.social?.fb != null,
           child: Column(
@@ -175,7 +167,6 @@ class AppSettings extends ConsumerWidget with UserMixin {
   }
 }
 
-// ✅ Hộp thoại xác nhận Logout
 void openLogoutDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -198,7 +189,6 @@ void openLogoutDialog(BuildContext context) {
   );
 }
 
-// ✅ Xử lý Logout
 Future<void> handleLogout(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   final storage = FlutterSecureStorage();
@@ -210,6 +200,5 @@ Future<void> handleLogout(BuildContext context) async {
 
   print("✅ User logged out successfully!");
 
-  // Chuyển về màn hình đăng nhập và xóa history
   ApiNextScreen.closeOthers(context, const LoginScreen());
 }

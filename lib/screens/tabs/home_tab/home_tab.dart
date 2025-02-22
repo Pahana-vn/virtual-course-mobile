@@ -15,6 +15,7 @@ import 'api_category3_courses.dart';
 import 'api_featured_courses.dart';
 import 'api_free_courses.dart';
 import 'api_home_categories.dart';
+import 'api_top_authors.dart';
 import 'category1_courses.dart';
 import 'category2_courses.dart';
 import 'category3_courses.dart';
@@ -83,8 +84,8 @@ class HomeTab extends ConsumerWidget {
                 const ApiCategory1Courses(),
                 const ApiCategory2Courses(),
                 const ApiCategory3Courses(),
-                Visibility(visible: settings?.topAuthors ?? true, child: const TopAuthors()),
-                Visibility(visible: settings?.latestCourses ?? true, child: const HomeLatestCourses()),
+                Visibility(visible: settings?.topAuthors ?? true, child: const ApiTopAuthors()),
+                // Visibility(visible: settings?.latestCourses ?? true, child: const HomeLatestCourses()),
               ],
             ),
           )

@@ -7,7 +7,7 @@ final apiInstructorServiceProvider = Provider<ApiInstructorService>((ref) {
   return ApiInstructorService();
 });
 
-final allInstructorsProvider = FutureProvider<List<InstructorDTO>>((ref) async {
+final apiTopAuthorsProvider = FutureProvider<List<InstructorDTO>>((ref) async {
   final service = ref.watch(apiInstructorServiceProvider);
   return service.fetchAllInstructors();
 });
