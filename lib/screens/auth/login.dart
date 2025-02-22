@@ -36,9 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('studentId', result['studentId']); // Đảm bảo lưu đúng studentId
 
+      // ✅ Kiểm tra xem có lưu được studentId không
+      final storedStudentId = prefs.getInt('studentId');
+      print("📝 Stored studentId: $storedStudentId"); // 👀 Debug xem có lưu chưa
+
       _btnController.success();
 
-      // Sử dụng ApiNextScreen thay vì NextScreen
+      // Chuyển màn hình sau khi đăng nhập
       ApiNextScreen.closeOthersAnimation(context, const ApiSplashScreen());
     } else {
       print("❌ Login failed");

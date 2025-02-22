@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../models/api_user_model.dart';
+
 class AuthService {
   final String baseUrl = "http://10.0.2.2:8080/api/auth"; // 🔹 Thay URL backend nếu cần
 
@@ -48,6 +50,39 @@ class AuthService {
 
     return response.statusCode == 200;
   }
+
+  /// 📌 **Lấy thông tin user từ studentId**
+  Future<ApiUserModel?> fetchUser(int studentId) async {
+    final String url = "http://10.0.2.2:8080/api/students/$studentId"; // 🔹 API lấy user theo studentId
+    final token = await getToken(); // 🔹 Lấy token từ storage
+
+    if (token == null) {
+      print("❌ [AuthService] - Không có token, không thể fetch user");
+      return null;
+    }
+
+    print("📡 [AuthService] - Fetching user từ API: $url với token: $token");
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token", // 🔹 Gửi token trong header
+      },
+    );
+
+    print("📡 [AuthService] - Response status: ${response.statusCode}");
+    print("📡 [AuthService] - Response body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return ApiUserModel.fromJson(data); // ✅ Convert JSON -> ApiUserModel
+    } else {
+      print("❌ [AuthService] - Lỗi khi fetch user: ${response.body}");
+      return null;
+    }
+  }
+
 
 
   /// 📌 **Đăng ký khóa học**
