@@ -5,7 +5,7 @@ import 'package:lms_app/screens/tabs/home_tab/home_tab.dart';
 import 'package:lms_app/screens/tabs/profile_tab/profile_tab.dart';
 import 'package:lms_app/screens/tabs/search_tab/search_tab.dart';
 import '../tabs/my_courses_tab/api_my_courses_tab.dart';
-import '../../../providers/api_user_data_provider.dart'; // ✅ Import file mới
+import '../../../providers/api_user_data_provider.dart'; // ✅ Import file xử lý dữ liệu user
 
 final homeTabControllerProvider = StateProvider<PageController>((ref) => PageController(initialPage: 0));
 
@@ -20,7 +20,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     super.initState();
-    fetchApiUserData(ref);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchApiUserData(ref, context); // ✅ Sửa lỗi: Truyền thêm context
+    });
   }
 
   @override
@@ -33,7 +35,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     if (user == null) {
       print('[HomeView] - User is null. Showing loading indicator.');
-      return const Center(child: CircularProgressIndicator());
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     final studentId = int.tryParse(user.id.toString());

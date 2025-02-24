@@ -60,6 +60,7 @@ dependencies:
   firebase_analytics: ^10.10.7
   screen_protector: ^1.4.2+1
   rounded_loading_button_plus: ^3.0.1
+  jwt_decoder: ^2.0.1
 
   http: ^1.0.0
 

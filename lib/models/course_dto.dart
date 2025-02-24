@@ -1,3 +1,5 @@
+import 'section_dto.dart';
+
 class CourseDTO {
   final int id;
   final String titleCourse;
@@ -16,6 +18,7 @@ class CourseDTO {
   final String instructorFirstName;
   final String instructorLastName;
   final int instructorId;
+  final List<SectionDTO> sections;
 
   CourseDTO({
     required this.id,
@@ -34,31 +37,38 @@ class CourseDTO {
     required this.instructorFirstName,
     required this.instructorLastName,
     required this.instructorId,
+    required this.sections,
     this.urlVideo,
   });
 
+  /// ✅ Chuyển đổi từ JSON sang CourseDTO (Xử lý lỗi kiểu dữ liệu)
   factory CourseDTO.fromJson(Map<String, dynamic> json) {
     return CourseDTO(
-      id: json['id'] as int,
+      id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
       titleCourse: json['titleCourse'] ?? "",
       description: json['description'] ?? "",
-      categoryId: json['categoryId'] ?? 0,
+      categoryId: json['categoryId'] is int ? json['categoryId'] : int.tryParse(json['categoryId'].toString()) ?? 0,
       categoryName: json['categoryName'] ?? "",
       level: json['level'] ?? "UNKNOWN",
       imageCover: json['imageCover'] ?? "",
       urlVideo: json['urlVideo'],
       hashtag: json['hashtag'] ?? "",
-      duration: json['duration'] ?? 0,
+      duration: json['duration'] is int ? json['duration'] : int.tryParse(json['duration'].toString()) ?? 0,
       basePrice: (json['basePrice'] as num?)?.toDouble() ?? 0.0,
       status: json['status'] ?? "UNKNOWN",
-      progress: json['progress'] ?? 0,
+      progress: json['progress'] is int ? json['progress'] : int.tryParse(json['progress'].toString()) ?? 0,
       instructorPhoto: json['instructorPhoto'] ?? "",
       instructorFirstName: json['instructorFirstName'] ?? "",
       instructorLastName: json['instructorLastName'] ?? "",
-      instructorId: json['instructorId'] ?? 0,
+      instructorId: json['instructorId'] is int ? json['instructorId'] : int.tryParse(json['instructorId'].toString()) ?? 0,
+      sections: (json['sections'] as List<dynamic>?)
+          ?.map((section) => SectionDTO.fromJson(section))
+          .toList() ??
+          [],
     );
   }
 
+  /// ✅ Chuyển đổi từ Object sang JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -78,6 +88,7 @@ class CourseDTO {
       'instructorFirstName': instructorFirstName,
       'instructorLastName': instructorLastName,
       'instructorId': instructorId,
+      'sections': sections.map((section) => section.toJson()).toList(),
     };
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../models/api_user_model.dart';
 
@@ -102,9 +103,22 @@ class AuthService {
     await storage.delete(key: "token");
   }
 
-  /// 📌 **Lấy token từ storage**
+  /// 📌 **Lấy token từ storage & kiểm tra hết hạn**
   Future<String?> getToken() async {
-    return await storage.read(key: "token");
+    String? token = await storage.read(key: "token");
+
+    if (token == null) {
+      print("❌ Không tìm thấy token, yêu cầu đăng nhập lại.");
+      return null;
+    }
+
+    if (JwtDecoder.isExpired(token)) {
+      print("❌ Token đã hết hạn, yêu cầu đăng nhập lại.");
+      await logout(); // 🔹 Xóa token và bắt đăng nhập lại
+      return null;
+    }
+
+    return token;
   }
 
   /// 📌 **Kiểm tra xem user đã đăng nhập chưa**

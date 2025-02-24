@@ -62,7 +62,7 @@ class ApiMyCoursesTab extends ConsumerWidget {
               separatorBuilder: (context, index) => const Divider(height: 50),
               itemBuilder: (context, index) {
                 print('[ApiMyCoursesTab] - Rendering course: ${data[index].titleCourse}');
-                return ApiMyCourseTile(course: data[index]);
+                return ApiMyCourseTile(course: data[index], studentId: studentId);
               },
             );
           },

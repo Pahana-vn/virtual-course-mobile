@@ -1,80 +1,91 @@
-// import 'package:feather_icons/feather_icons.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:lms_app/ads/ad_manager.dart';
-// import 'package:lms_app/ads/banner_ad.dart';
-// import 'package:lms_app/screens/course_details.dart/course_share_button.dart';
-// import 'bookmark_button.dart'; // ✅ Thay BookmarkButton bằng ApiBookmarkButton
-// import '../../models/course_dto.dart'; // ✅ Dùng CourseDTO thay vì Course
-// import 'course_description.dart';
-// import 'course_info.dart';
-// import 'course_reviews.dart';
-// import 'course_tags.dart';
-// import 'curriculam.dart';
-// import 'enroll_button.dart';
-// import 'learnings.dart';
-// import 'preview_box.dart';
-// import 'related_courses.dart';
-// import 'requirements.dart';
-// import 'review_button.dart';
-// import 'title_info.dart';
-//
-// class ApiDetailsView extends ConsumerWidget {
-//   const ApiDetailsView({super.key, required this.courseDTO, this.heroTag});
-//
-//   final CourseDTO courseDTO; // ✅ Dùng CourseDTO
-//   final Object? heroTag;
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     return Scaffold(
-//       bottomNavigationBar: Wrap(
-//         alignment: WrapAlignment.center,
-//         children: [
-//           AdManager.isBannerEnbaled(ref) ? const BannerAdWidget() : Container(),
-//           EnrollButton(courseDTO: courseDTO), // ✅ Truyền nguyên `CourseDTO`
-//         ],
-//       ),
-//       body: CustomScrollView(
-//         slivers: [
-//           SliverAppBar(
-//             pinned: false,
-//             floating: true,
-//             leading: IconButton(
-//               onPressed: () => Navigator.pop(context),
-//               icon: const Icon(FeatherIcons.chevronLeft),
-//             ),
-//             actions: [
-//               BookmarkButton(courseDTO: courseDTO),
-//               ReviewButton(courseDTO: courseDTO),
-//               CourseShareButton(courseDTO: courseDTO),
-//               const SizedBox(width: 10),
-//             ],
-//           ),
-//           SliverToBoxAdapter(
-//             child: Padding(
-//               padding: const EdgeInsets.fromLTRB(20, 5, 20, 30),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   PreviewBox(imageUrl: courseDTO.imageCover, heroTag: heroTag), // ✅ Dùng `imageCover`
-//                   const SizedBox(height: 20),
-//                   TitleInfo(title: courseDTO.titleCourse),
-//                   CourseInfo(level: courseDTO.level, category: courseDTO.categoryName),
-//                   Learnings(description: courseDTO.description), // ✅ Sử dụng mô tả từ CourseDTO
-//                   const SizedBox(height: 40),
-//                   Curriculam(courseId: courseDTO.id), // ✅ Dùng ID của khóa học
-//                   Requirements(requirements: "Updating..."), // ✅ Hiện tại chưa có requirements từ API
-//                   CourseDescription(description: courseDTO.description),
-//                   CourseTags(tags: ["IT", "Development"]), // ✅ Gán tạm một số tag
-//                   RelatedCourses(categoryId: courseDTO.categoryId), // ✅ Load khóa học liên quan theo category
-//                   CourseReviews(courseId: courseDTO.id), // ✅ Load đánh giá
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:feather_icons/feather_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../models/course_dto.dart';
+import '../../providers/api_course_provider.dart';
+import 'api_course_description.dart';
+import 'api_curriculam.dart';
+import 'api_preview_box.dart';
+import 'api_requirements.dart';
+import 'api_title_info.dart';
+import 'api_course_info.dart';
+import 'api_learnings.dart';
+
+class ApiCourseDetailsView extends ConsumerWidget {
+  final int courseId;
+  final int studentId;
+
+  const ApiCourseDetailsView({super.key, required this.courseId, required this.studentId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    print('📡 Fetching details for CourseID: $courseId - StudentID: $studentId');
+
+    // Sử dụng ref.read để tránh rebuild liên tục
+    final courseDetails = ref.read(courseDetailsProvider({"courseId": courseId, "studentId": studentId}));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Course Details"),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(FeatherIcons.chevronLeft),
+        ),
+      ),
+      body: FutureBuilder<CourseDTO>(
+        future: ref.read(apiCourseServiceProvider).fetchCourseDetails(courseId, studentId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 50),
+                  const SizedBox(height: 10),
+                  Text("Failed to load course details.\nError: ${snapshot.error}", textAlign: TextAlign.center),
+                ],
+              ),
+            );
+          } else if (!snapshot.hasData) {
+            return const Center(child: Text("No data found."));
+          }
+
+          final course = snapshot.data!;
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ApiPreviewBox(course: course),
+                      const SizedBox(height: 20),
+                      ApiTitleInfo(course: course),
+                      ApiCourseInfo(course: course),
+                      ApiLearnings(),
+                      const SizedBox(height: 40),
+                      if (course.sections.isNotEmpty) ...[
+                        ApiCurriculam(course: course),
+                      ] else
+                        const Center(
+                          child: Text(
+                            "No sections available in this course.",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ApiRequirements(),
+                      ApiCourseDescription(course: course),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}

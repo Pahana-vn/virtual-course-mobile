@@ -2,39 +2,52 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../models/course_dto.dart';
 import '../../../utils/custom_cached_image.dart';
+import '../../course_details.dart/api_details_view.dart';
 
 class ApiMyCourseTile extends StatelessWidget {
-  const ApiMyCourseTile({super.key, required this.course});
-
   final CourseDTO course;
+  final int studentId;
+
+  const ApiMyCourseTile({super.key, required this.course, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
     final heroTag = UniqueKey();
 
-    // Xác định nút hiển thị dựa trên tiến trình
+    // Xác định trạng thái nút dựa trên tiến trình học
     final String buttonText = course.progress > 0 ? "Continue Course" : "Start Course";
     final Color buttonColor = course.progress > 0 ? Colors.blue : Colors.purple;
 
     return InkWell(
       onTap: () {
-        // TODO: Chuyển đến chi tiết khóa học khi bấm vào
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ApiCourseDetailsView(
+              courseId: course.id, // ✅ Chỉ truyền courseId thay vì cả đối tượng
+              studentId: studentId, // ✅ Truyền studentId từ `My Courses`
+            ),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Hình ảnh khóa học
+            // 📌 Ảnh khóa học
             Container(
               height: 90,
               width: 100,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(3)),
-              child: Hero(tag: heroTag, child: CustomCacheImage(imageUrl: course.imageCover, radius: 3)),
+              child: Hero(
+                tag: heroTag,
+                child: CustomCacheImage(imageUrl: course.imageCover, radius: 3),
+              ),
             ),
             const SizedBox(width: 16),
 
-            // Thông tin khóa học + progress + nút
+            // 📌 Nội dung khóa học
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +88,7 @@ class ApiMyCourseTile extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
-                  // Nút Start Course / Continue Course
+                  // Nút "Start Course" hoặc "Continue Course"
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -84,8 +97,15 @@ class ApiMyCourseTile extends StatelessWidget {
                     ),
                     child: Text(buttonText).tr(),
                     onPressed: () {
-                      print("Opening course: ${course.titleCourse}");
-                      // onPressed: () => handleOpenCourse(context, user: user, course: course);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ApiCourseDetailsView(
+                            courseId: course.id,
+                            studentId: studentId,
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ],
