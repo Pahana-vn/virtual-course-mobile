@@ -5,39 +5,19 @@ import '../video_player_screen.dart';
 
 class ApiSections extends StatelessWidget {
   final SectionDTO section;
+  final int index;
 
-  const ApiSections({super.key, required this.section});
+  const ApiSections({super.key, required this.section, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Text(
-        section.titleSection,
+        "${index + 1}. ${section.titleSection}",
         style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
       ),
-      children: section.lectures
-          .where((lecture) => lecture.lectureVideo.isNotEmpty)
-          .map((lecture) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Hiển thị articles nếu có
-          if (lecture.articles.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: lecture.articles.map((article) => ListTile(
-                  leading: const Icon(FeatherIcons.fileText), // Biểu tượng cho article
-                  title: Text(article.content),
-                  subtitle: Text("File: ${article.fileUrl}"),
-                  onTap: () {
-                    // Xử lý khi bấm vào article (ví dụ: mở file PDF)
-                    print("Opening article: ${article.fileUrl}");
-                  },
-                )).toList(),
-              ),
-            ),
-          // Hiển thị lecture
+      children: section.lectures.expand((lecture) {
+        return [
           ListTile(
             leading: Icon(
               FeatherIcons.playCircle,
@@ -54,9 +34,16 @@ class ApiSections extends StatelessWidget {
               );
             },
           ),
-        ],
-      ))
-          .toList(),
+          ...lecture.articles.map((article) => ListTile(
+            leading: const Icon(FeatherIcons.fileText),
+            title: const Text("Document"),
+            subtitle: Text("File: ${article.fileUrl}"),
+            onTap: () {
+              print("Opening article: ${article.fileUrl}");
+            },
+          )),
+        ];
+      }).toList(),
     );
   }
 }

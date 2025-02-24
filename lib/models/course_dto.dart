@@ -19,6 +19,8 @@ class CourseDTO {
   final String instructorLastName;
   final int instructorId;
   final List<SectionDTO> sections;
+  final int? finalTestId; // ✅ Thêm trường finalTestId
+  final bool allLecturesCompleted; // ✅ Thêm trường allLecturesCompleted
 
   CourseDTO({
     required this.id,
@@ -39,6 +41,8 @@ class CourseDTO {
     required this.instructorId,
     required this.sections,
     this.urlVideo,
+    this.finalTestId, // ✅ Thêm vào constructor
+    required this.allLecturesCompleted, // ✅ Thêm vào constructor
   });
 
   /// ✅ Chuyển đổi từ JSON sang CourseDTO (Xử lý lỗi kiểu dữ liệu)
@@ -63,8 +67,9 @@ class CourseDTO {
       instructorId: json['instructorId'] is int ? json['instructorId'] : int.tryParse(json['instructorId'].toString()) ?? 0,
       sections: (json['sections'] as List<dynamic>?)
           ?.map((section) => SectionDTO.fromJson(section))
-          .toList() ??
-          [],
+          .toList() ?? [],
+      finalTestId: json['finalTestId'] is int ? json['finalTestId'] : int.tryParse(json['finalTestId']?.toString() ?? ""),
+      allLecturesCompleted: json['allLecturesCompleted'] ?? false, // ✅ Mặc định là `false`
     );
   }
 
@@ -89,6 +94,8 @@ class CourseDTO {
       'instructorLastName': instructorLastName,
       'instructorId': instructorId,
       'sections': sections.map((section) => section.toJson()).toList(),
+      'finalTestId': finalTestId,
+      'allLecturesCompleted': allLecturesCompleted,
     };
   }
 }

@@ -26,7 +26,16 @@ class ApiCurriculam extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: course.sections.length,
           itemBuilder: (context, index) {
-            return ApiSections(section: course.sections[index]);
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.black12, width: 1.5),
+                ),
+                child: ApiSections(section: course.sections[index], index: index),
+              ),
+            );
           },
         ),
       ],

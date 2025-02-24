@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/course_dto.dart';
+import '../models/test_dto.dart';
 
 class ApiCourseService {
   final String baseUrl = 'http://10.0.2.2:8080/api/courses';
@@ -86,6 +87,33 @@ class ApiCourseService {
     } catch (e) {
       print('❌ Lỗi khi gọi API fetchCourseDetails: $e');
       throw Exception('❌ Lỗi khi gọi API fetchCourseDetails: $e');
+    }
+  }
+
+  /// Lấy danh sách bài kiểm tra của khóa học
+  Future<List<TestDTO>> fetchTestsByCourse(int courseId) async {
+    try {
+      final token = await storage.read(key: "token");
+      if (token == null) {
+        throw Exception('Token is missing. Please login again.');
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/$courseId/tests'),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = jsonDecode(response.body);
+        return jsonList.map((e) => TestDTO.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to load tests for course ID: $courseId');
+      }
+    } catch (e) {
+      throw Exception('❌ Lỗi khi gọi API fetchTestsByCourse: $e');
     }
   }
 }

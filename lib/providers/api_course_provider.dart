@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/course_dto.dart';
+import '../models/test_dto.dart';
 import '../services/api_course_service.dart';
 
 /// 🟢 Provider cho `ApiCourseService`
@@ -53,4 +54,10 @@ final courseDetailsProvider = FutureProvider.autoDispose.family<CourseDTO, Map<S
   print('✅ Course loaded: ${course.titleCourse}, Sections: ${course.sections.length}');
 
   return course;
+});
+
+// Provider để lấy danh sách bài kiểm tra của khóa học
+final testsByCourseProvider = FutureProvider.family<List<TestDTO>, int>((ref, courseId) async {
+  final apiService = ref.watch(apiCourseServiceProvider);
+  return await apiService.fetchTestsByCourse(courseId);
 });
