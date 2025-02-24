@@ -38,4 +38,78 @@ class ApiStudentService {
       throw Exception('❌ Lỗi khi gọi API fetchStudentCourses: $e');
     }
   }
+
+  /// 📌 **Lấy danh sách wishlist của sinh viên**
+  Future<List<CourseDTO>> fetchWishlist(int studentId) async {
+    try {
+      final token = await storage.read(key: "token");
+      if (token == null) throw Exception('Token is missing. Please login again.');
+
+      // ✅ Đảm bảo luôn có platform=flutter
+      final Uri url = Uri.parse('$baseUrl/$studentId/wishlist').replace(queryParameters: {"platform": "flutter"});
+
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> coursesJson = jsonDecode(response.body);
+        return coursesJson.map((e) => CourseDTO.fromJson(e)).toList();
+      } else if (response.statusCode == 403) {
+        throw Exception('Unauthorized access - You do not have permission.');
+      } else if (response.statusCode == 401) {
+        throw Exception('Invalid or expired token. Please login again.');
+      } else {
+        throw Exception('Failed to load wishlist. Error: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('❌ Lỗi khi gọi API fetchWishlist: $e');
+    }
+  }
+
+
+  /// 📌 **Thêm khóa học vào wishlist**
+  Future<bool> addToWishlist(int studentId, CourseDTO course) async {
+    try {
+      final token = await storage.read(key: "token");
+      if (token == null) throw Exception('Token is missing. Please login again.');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/$studentId/wishlist'),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(course.toJson()),
+      );
+
+      return response.statusCode == 201;
+    } catch (e) {
+      throw Exception('❌ Lỗi khi thêm vào wishlist: $e');
+    }
+  }
+
+  /// 📌 **Xóa khóa học khỏi wishlist**
+  Future<bool> removeFromWishlist(int studentId, int courseId) async {
+    try {
+      final token = await storage.read(key: "token");
+      if (token == null) throw Exception('Token is missing. Please login again.');
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl/$studentId/wishlist/$courseId'),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+      );
+
+      return response.statusCode == 204;
+    } catch (e) {
+      throw Exception('❌ Lỗi khi xóa khỏi wishlist: $e');
+    }
+  }
 }

@@ -20,3 +20,17 @@ final studentCoursesProvider = FutureProvider.family<List<CourseDTO>, int>((ref,
     throw Exception('Lỗi khi lấy danh sách khóa học của sinh viên');
   }
 });
+
+/// 🟢 FutureProvider để lấy danh sách wishlist của sinh viên
+final wishlistProvider = FutureProvider.family<List<CourseDTO>, int>((ref, studentId) async {
+  try {
+    print('[WishlistProvider] - Fetching wishlist for studentId: $studentId');
+    final service = ref.watch(apiStudentServiceProvider);
+    final wishlist = await service.fetchWishlist(studentId);
+    print('[WishlistProvider] - Fetched ${wishlist.length} wishlist courses');
+    return wishlist;
+  } catch (e) {
+    print('❌ Lỗi khi lấy danh sách wishlist của sinh viên ID: $studentId - $e');
+    throw Exception('Lỗi khi lấy danh sách wishlist của sinh viên');
+  }
+});

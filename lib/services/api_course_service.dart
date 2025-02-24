@@ -61,28 +61,37 @@ class ApiCourseService {
   Future<CourseDTO> fetchCourseDetails(int courseId, int studentId) async {
     try {
       final token = await storage.read(key: "token");
-      print('🔑 Token: $token'); // ✅ Kiểm tra token có null không
       if (token == null) {
         throw Exception('Token is missing. Please login again.');
       }
 
+      // ✅ Đảm bảo URL đúng chuẩn, thêm query parameters an toàn
+      final Uri url = Uri.parse('$baseUrl/$courseId/details-for-student')
+          .replace(queryParameters: {"studentId": studentId.toString(), "platform": "flutter"});
+
+      print('📡 API Request URL: $url'); // ✅ Debug URL để kiểm tra
+
       final response = await http.get(
-        Uri.parse('$baseUrl/$courseId/details-for-student?studentId=$studentId'),
+        url,
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json"
         },
       );
 
-      print('📡 API Response Status: ${response.statusCode}'); // ✅ Debug API status
-      print('📡 API Response Body: ${response.body}'); // ✅ Debug API nội dung trả về
+      print('📡 API Response Status: ${response.statusCode}'); // ✅ Debug status
+      print('📡 API Response Body: ${response.body}'); // ✅ Debug nội dung trả về
 
       if (response.statusCode == 200) {
-        final courseJson = jsonDecode(response.body);
+        final Map<String, dynamic> courseJson = jsonDecode(response.body);
         print('✅ Successfully parsed Course: ${courseJson['titleCourse']}');
         return CourseDTO.fromJson(courseJson);
+      } else if (response.statusCode == 403) {
+        throw Exception('Unauthorized access - You do not have permission.');
+      } else if (response.statusCode == 401) {
+        throw Exception('Invalid or expired token. Please login again.');
       } else {
-        throw Exception('Failed to load course details for course ID: $courseId');
+        throw Exception('Failed to load course details for course ID: $courseId. Error: ${response.body}');
       }
     } catch (e) {
       print('❌ Lỗi khi gọi API fetchCourseDetails: $e');
