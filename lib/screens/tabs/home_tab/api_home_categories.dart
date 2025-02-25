@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lms_app/components/loading_tile.dart';
 import 'package:lms_app/screens/all_courses.dart/courses_view.dart';
 import 'package:lms_app/utils/next_screen.dart';
-import '../../../models/category_dto.dart'; // ✅ Import CategoryDTO
-import '../../../providers/api_category_provider.dart'; // ✅ Import Provider API
+import '../../../models/category_dto.dart';
+import '../../../providers/api_category_provider.dart';
 import '../../home/home_bottom_bar.dart';
 import '../../home/home_view.dart';
 
@@ -14,12 +14,12 @@ class ApiHomeCategories extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = ref.watch(allCategoriesProvider); // ✅ Gọi API lấy danh mục
+    final categories = ref.watch(allCategoriesProvider);
 
     return categories.when(
       skipLoadingOnRefresh: false,
-      data: (List<CategoryDTO> categories) { // ✅ Chắc chắn dùng đúng kiểu CategoryDTO
-        if (categories.isEmpty) return const SizedBox(); // ✅ Nếu không có danh mục, không hiển thị
+      data: (List<CategoryDTO> categories) {
+        if (categories.isEmpty) return const SizedBox();
 
         return Container(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -62,7 +62,7 @@ class ApiHomeCategories extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   label: Text(
-                    category.name, // ✅ Dùng `category.name` từ CategoryDTO
+                    category.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ))
@@ -72,8 +72,8 @@ class ApiHomeCategories extends ConsumerWidget {
           ),
         );
       },
-      error: (e, x) => Center(child: Text('Error loading categories: $e')), // ✅ Hiển thị lỗi nếu có
-      loading: () => const LoadingTile(height: 100, padding: 0), // ✅ Hiển thị hiệu ứng loading
+      error: (e, x) => Center(child: Text('Error loading categories: $e')),
+      loading: () => const LoadingTile(height: 100, padding: 0),
     );
   }
 }

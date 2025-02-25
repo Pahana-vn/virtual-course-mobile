@@ -1,4 +1,4 @@
-import 'article_dto.dart'; // Import lớp ArticleDTO
+import 'article_dto.dart';
 
 class LectureDTO {
   final int id;
@@ -18,7 +18,7 @@ class LectureDTO {
     required this.lectureOrder,
     required this.completed,
     required this.sectionId,
-    required this.articles, // Thêm vào constructor
+    required this.articles,
   });
 
   factory LectureDTO.fromJson(Map<String, dynamic> json) {
@@ -33,7 +33,7 @@ class LectureDTO {
       articles: (json['articles'] as List<dynamic>?)
           ?.map((article) => ArticleDTO.fromJson(article))
           .toList() ??
-          [], // Xử lý danh sách articles
+          [],
     );
   }
 
@@ -46,7 +46,7 @@ class LectureDTO {
       'lectureOrder': lectureOrder,
       'completed': completed,
       'sectionId': sectionId,
-      'articles': articles.map((article) => article.toJson()).toList(), // Chuyển đổi danh sách articles
+      'articles': articles.map((article) => article.toJson()).toList(),
     };
   }
 }

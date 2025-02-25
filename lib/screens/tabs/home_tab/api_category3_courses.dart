@@ -5,7 +5,7 @@ import 'package:lms_app/components/loading_tile.dart';
 import 'package:lms_app/models/course_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../providers/api_course_provider.dart';
-import '../../course_details.dart/api_course_details_buy.dart'; // ✅ Import màn hình chi tiết khóa học
+import '../../course_details.dart/api_course_details_buy.dart';
 import '../../../components/api_horizontal_course_tile.dart';
 
 class ApiCategory3Courses extends ConsumerWidget {
@@ -84,7 +84,7 @@ class ApiCategory3Courses extends ConsumerWidget {
                               MaterialPageRoute(
                                 builder: (context) => ApiCourseDetailsBuy(
                                   courseId: course.id,
-                                  studentId: studentId, // ✅ Lấy từ SharedPreferences
+                                  studentId: studentId,
                                 ),
                               ),
                             );

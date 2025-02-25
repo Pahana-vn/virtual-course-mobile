@@ -19,8 +19,8 @@ class CourseDTO {
   final String instructorLastName;
   final int instructorId;
   final List<SectionDTO> sections;
-  final int? finalTestId; // ✅ Thêm trường finalTestId
-  final bool allLecturesCompleted; // ✅ Thêm trường allLecturesCompleted
+  final int? finalTestId;
+  final bool allLecturesCompleted;
 
   CourseDTO({
     required this.id,
@@ -41,11 +41,10 @@ class CourseDTO {
     required this.instructorId,
     required this.sections,
     this.urlVideo,
-    this.finalTestId, // ✅ Thêm vào constructor
-    required this.allLecturesCompleted, // ✅ Thêm vào constructor
+    this.finalTestId,
+    required this.allLecturesCompleted,
   });
 
-  /// ✅ Chuyển đổi từ JSON sang CourseDTO (Xử lý lỗi kiểu dữ liệu)
   factory CourseDTO.fromJson(Map<String, dynamic> json) {
     return CourseDTO(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
@@ -69,11 +68,10 @@ class CourseDTO {
           ?.map((section) => SectionDTO.fromJson(section))
           .toList() ?? [],
       finalTestId: json['finalTestId'] is int ? json['finalTestId'] : int.tryParse(json['finalTestId']?.toString() ?? ""),
-      allLecturesCompleted: json['allLecturesCompleted'] ?? false, // ✅ Mặc định là `false`
+      allLecturesCompleted: json['allLecturesCompleted'] ?? false,
     );
   }
 
-  /// ✅ Chuyển đổi từ Object sang JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,

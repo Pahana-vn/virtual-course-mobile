@@ -41,9 +41,9 @@ class ApiMyCoursesTab extends ConsumerWidget {
             return const LoadingListTile(height: 200);
           },
           error: (error, stackTrace) {
-            print('❌ [ApiMyCoursesTab] - Error loading courses: $error');
-            print('❌ Stacktrace: $stackTrace');
-            return Center(child: Text('Error: $error\n$stackTrace')); // ✅ Hiển thị lỗi rõ hơn
+            print('[ApiMyCoursesTab] - Error loading courses: $error');
+            print('Stacktrace: $stackTrace');
+            return Center(child: Text('Error: $error\n$stackTrace'));
           },
           data: (data) {
             print('[ApiMyCoursesTab] - Courses loaded: ${data.length}');

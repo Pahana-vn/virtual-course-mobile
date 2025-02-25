@@ -7,8 +7,8 @@ import 'package:lms_app/utils/next_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../providers/api_course_provider.dart';
 import '../../all_courses.dart/courses_view.dart';
-import '../../course_details.dart/api_course_details_buy.dart'; // ✅ Import màn hình chi tiết khóa học
-import '../../../components/api_horizontal_course_tile.dart'; // ✅ Import file mới
+import '../../course_details.dart/api_course_details_buy.dart';
+import '../../../components/api_horizontal_course_tile.dart';
 
 class ApiFreeCourses extends ConsumerWidget {
   const ApiFreeCourses({super.key});

@@ -5,7 +5,7 @@ import 'package:lms_app/screens/tabs/home_tab/home_tab.dart';
 import 'package:lms_app/screens/tabs/profile_tab/profile_tab.dart';
 import 'package:lms_app/screens/tabs/search_tab/search_tab.dart';
 import '../tabs/my_courses_tab/api_my_courses_tab.dart';
-import '../../../providers/api_user_data_provider.dart'; // ✅ Import file xử lý dữ liệu user
+import '../../../providers/api_user_data_provider.dart';
 
 final homeTabControllerProvider = StateProvider<PageController>((ref) => PageController(initialPage: 0));
 
@@ -21,7 +21,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchApiUserData(ref, context); // ✅ Sửa lỗi: Truyền thêm context
+      fetchApiUserData(ref, context);
     });
   }
 

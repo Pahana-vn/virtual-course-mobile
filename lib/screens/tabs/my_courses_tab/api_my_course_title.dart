@@ -14,7 +14,6 @@ class ApiMyCourseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final heroTag = UniqueKey();
 
-    // Xác định trạng thái nút dựa trên tiến trình học
     final String buttonText = course.progress > 0 ? "Continue Course" : "Start Course";
     final Color buttonColor = course.progress > 0 ? Colors.blue : Colors.purple;
 
@@ -24,8 +23,8 @@ class ApiMyCourseTile extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ApiCourseDetailsView(
-              courseId: course.id, // ✅ Chỉ truyền courseId thay vì cả đối tượng
-              studentId: studentId, // ✅ Truyền studentId từ `My Courses`
+              courseId: course.id,
+              studentId: studentId,
             ),
           ),
         );
@@ -35,7 +34,6 @@ class ApiMyCourseTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 📌 Ảnh khóa học
             Container(
               height: 90,
               width: 100,
@@ -47,12 +45,10 @@ class ApiMyCourseTile extends StatelessWidget {
             ),
             const SizedBox(width: 16),
 
-            // 📌 Nội dung khóa học
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Tiêu đề khóa học
                   Text(
                     course.titleCourse,
                     maxLines: 2,
@@ -61,14 +57,12 @@ class ApiMyCourseTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
 
-                  // Tên giảng viên
                   Text(
                     'By ${course.instructorFirstName} ${course.instructorLastName}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.blueAccent),
                   ),
                   const SizedBox(height: 10),
 
-                  // Thanh tiến trình
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -88,7 +82,6 @@ class ApiMyCourseTile extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
-                  // Nút "Start Course" hoặc "Continue Course"
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

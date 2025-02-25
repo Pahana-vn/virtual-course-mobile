@@ -8,7 +8,6 @@ class ApiCourseService {
   final String baseUrl = 'http://10.0.2.2:8080/api/courses';
   final storage = FlutterSecureStorage();
 
-  /// 🟢 Lấy danh sách tất cả khóa học
   Future<List<CourseDTO>> fetchAllCourses() async {
     try {
       final response = await http.get(Uri.parse('$baseUrl?platform=flutter'));
@@ -20,11 +19,10 @@ class ApiCourseService {
         throw Exception('Failed to load courses');
       }
     } catch (e) {
-      throw Exception('❌ Lỗi khi gọi API fetchAllCourses: $e');
+      throw Exception('Error when calling fetchAllCourses API: $e');
     }
   }
 
-  /// 🟢 Lấy thông tin khóa học theo ID
   Future<CourseDTO> fetchCourseById(int courseId) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/$courseId?platform=flutter'));
@@ -35,11 +33,10 @@ class ApiCourseService {
         throw Exception('Failed to load course with ID: $courseId');
       }
     } catch (e) {
-      throw Exception('❌ Lỗi khi gọi API fetchCourseById: $e');
+      throw Exception('Lỗi khi gọi API fetchCourseById: $e');
     }
   }
 
-  /// 🟢 Lấy danh sách khóa học theo danh mục
   Future<List<CourseDTO>> fetchCoursesByCategoryId(int categoryId) async {
     try {
       final response = await http.get(
@@ -53,11 +50,10 @@ class ApiCourseService {
         throw Exception('Failed to load courses by category ID: $categoryId');
       }
     } catch (e) {
-      throw Exception('❌ Lỗi khi gọi API fetchCoursesByCategoryId: $e');
+      throw Exception('Error when calling API fetchCoursesByCategoryId: $e');
     }
   }
 
-  /// 🟢 Lấy chi tiết khóa học (gồm Sections & Lectures) cho sinh viên
   Future<CourseDTO> fetchCourseDetails(int courseId, int studentId) async {
     try {
       final token = await storage.read(key: "token");
@@ -65,11 +61,8 @@ class ApiCourseService {
         throw Exception('Token is missing. Please login again.');
       }
 
-      // ✅ Đảm bảo URL đúng chuẩn, thêm query parameters an toàn
       final Uri url = Uri.parse('$baseUrl/$courseId/details-for-student')
           .replace(queryParameters: {"studentId": studentId.toString(), "platform": "flutter"});
-
-      print('📡 API Request URL: $url'); // ✅ Debug URL để kiểm tra
 
       final response = await http.get(
         url,
@@ -79,12 +72,8 @@ class ApiCourseService {
         },
       );
 
-      print('📡 API Response Status: ${response.statusCode}'); // ✅ Debug status
-      print('📡 API Response Body: ${response.body}'); // ✅ Debug nội dung trả về
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> courseJson = jsonDecode(response.body);
-        print('✅ Successfully parsed Course: ${courseJson['titleCourse']}');
         return CourseDTO.fromJson(courseJson);
       } else if (response.statusCode == 403) {
         throw Exception('Unauthorized access - You do not have permission.');
@@ -94,12 +83,10 @@ class ApiCourseService {
         throw Exception('Failed to load course details for course ID: $courseId. Error: ${response.body}');
       }
     } catch (e) {
-      print('❌ Lỗi khi gọi API fetchCourseDetails: $e');
-      throw Exception('❌ Lỗi khi gọi API fetchCourseDetails: $e');
+      throw Exception('Error calling fetchCourseDetails API: $e');
     }
   }
 
-  /// Lấy danh sách bài kiểm tra của khóa học
   Future<List<TestDTO>> fetchTestsByCourse(int courseId) async {
     try {
       final token = await storage.read(key: "token");
@@ -122,7 +109,29 @@ class ApiCourseService {
         throw Exception('Failed to load tests for course ID: $courseId');
       }
     } catch (e) {
-      throw Exception('❌ Lỗi khi gọi API fetchTestsByCourse: $e');
+      throw Exception('Error when calling fetchTestsByCourse API: $e');
+    }
+  }
+
+  Future<List<CourseDTO>> searchCourses(String keyword) async {
+    try {
+      if (keyword.isEmpty) {
+        return [];
+      }
+
+      final Uri url = Uri.parse('$baseUrl/search-flutter')
+          .replace(queryParameters: {"keyword": keyword, "platform": "flutter"});
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = jsonDecode(response.body);
+        return jsonList.map((e) => CourseDTO.fromJson(e)).toList();
+      } else {
+        throw Exception('No courses found matching your keyword: $keyword');
+      }
+    } catch (e) {
+      throw Exception('Error while searching for course: $e');
     }
   }
 }

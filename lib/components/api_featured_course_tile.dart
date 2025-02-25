@@ -3,9 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_app/constants/custom_colors.dart';
 import 'package:lms_app/services/app_service.dart';
-import 'package:lms_app/models/course_dto.dart'; // ✅ Dùng CourseDTO thay vì Course
-import 'package:lms_app/screens/course_details.dart/details_view.dart';
-import 'package:lms_app/utils/next_screen.dart';
+import 'package:lms_app/models/course_dto.dart';
 import 'rating_bar.dart';
 
 class ApiFeaturedCourseTile extends StatelessWidget {
@@ -14,7 +12,7 @@ class ApiFeaturedCourseTile extends StatelessWidget {
     required this.courseDTO,
   });
 
-  final CourseDTO courseDTO; // ✅ Sử dụng CourseDTO thay vì Course
+  final CourseDTO courseDTO;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +47,7 @@ class ApiFeaturedCourseTile extends StatelessWidget {
                           topLeft: Radius.circular(3),
                           topRight: Radius.circular(3)),
                       image: DecorationImage(
-                        image: CachedNetworkImageProvider(courseDTO.imageCover), // ✅ Dùng imageCover từ CourseDTO
+                        image: CachedNetworkImageProvider(courseDTO.imageCover),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -86,7 +84,7 @@ class ApiFeaturedCourseTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    courseDTO.titleCourse, // ✅ Dùng titleCourse từ CourseDTO
+                    courseDTO.titleCourse,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
@@ -101,9 +99,9 @@ class ApiFeaturedCourseTile extends StatelessWidget {
                         .textTheme
                         .bodyMedium
                         ?.copyWith(color: Colors.blueGrey),
-                  ).tr(args: ["0"]), // ✅ Tạm thời để số lượng học viên là 0 (chưa có field)
+                  ).tr(args: ["0"]),
                   const SizedBox(height: 3),
-                  RatingViewer(rating: 4.5), // ✅ Tạm thời set rating cố định
+                  RatingViewer(rating: 4.5),
                 ],
               ),
             )

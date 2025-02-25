@@ -31,26 +31,24 @@ class InstructorDTO {
     this.accountEmail,
   });
 
-  // Chuyển từ JSON sang InstructorDTO
   factory InstructorDTO.fromJson(Map<String, dynamic> json) {
     return InstructorDTO(
       id: json['id'] as int,
-      firstName: json['firstName'] ?? "", // Đảm bảo không null
-      lastName: json['lastName'] ?? "", // Đảm bảo không null
-      gender: json['gender'], // Có thể null
-      address: json['address'], // Có thể null
-      phone: json['phone'], // Có thể null
-      verifiedPhone: json['verifiedPhone'] ?? false, // Nếu null, mặc định là false
-      bio: json['bio'], // Có thể null
-      title: json['title'], // Có thể null
-      photo: json['photo'], // Có thể null
-      workplace: json['workplace'], // Có thể null
-      accountUsername: json['accountUsername'], // Có thể null
-      accountEmail: json['accountEmail'], // Có thể null
+      firstName: json['firstName'] ?? "",
+      lastName: json['lastName'] ?? "",
+      gender: json['gender'],
+      address: json['address'],
+      phone: json['phone'],
+      verifiedPhone: json['verifiedPhone'] ?? false,
+      bio: json['bio'],
+      title: json['title'],
+      photo: json['photo'],
+      workplace: json['workplace'],
+      accountUsername: json['accountUsername'],
+      accountEmail: json['accountEmail'],
     );
   }
 
-  // Chuyển từ InstructorDTO thành JSON (nếu cần gửi API)
   Map<String, dynamic> toJson() {
     return {
       'id': id,

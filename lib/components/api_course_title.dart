@@ -25,7 +25,7 @@ class ApiCourseTile extends StatelessWidget {
       future: _getStudentId(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const SizedBox(); // Không hiển thị gì nếu chưa có studentId
+          return const SizedBox();
         }
 
         final studentId = snapshot.data!;
@@ -71,7 +71,7 @@ class ApiCourseTile extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.blueGrey),
                       ),
                       const SizedBox(height: 5),
-                      RatingViewer(rating: 4.5), // ✅ Không có rating trong CourseDTO, để mặc định
+                      RatingViewer(rating: 4.5),
                     ],
                   ),
                 ),

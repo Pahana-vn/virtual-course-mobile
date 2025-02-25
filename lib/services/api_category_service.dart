@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/category_dto.dart';
 
 class ApiCategoryService {
-  final String baseUrl = 'http://10.0.2.2:8080/api/categories';
+  final String baseUrl = 'http://10.0.2.2:8080/api/categories?platform=flutter';
 
   Future<List<CategoryDTO>> fetchAllCategories() async {
     final response = await http.get(Uri.parse(baseUrl));
@@ -15,6 +15,4 @@ class ApiCategoryService {
       throw Exception('Failed to load categories');
     }
   }
-
-// ... getCategoryById, create, update, delete nếu cần
 }

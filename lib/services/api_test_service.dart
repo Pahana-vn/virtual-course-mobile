@@ -7,7 +7,6 @@ class ApiTestService {
   final String baseUrl = 'http://10.0.2.2:8080/api/tests';
   final storage = FlutterSecureStorage();
 
-  /// Nộp bài kiểm tra
   Future<Map<String, dynamic>> submitTest(TestSubmissionDTO submission) async {
     try {
       final token = await storage.read(key: "token");

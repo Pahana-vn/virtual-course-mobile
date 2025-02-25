@@ -7,8 +7,9 @@ import 'package:lms_app/screens/search/search_view.dart';
 import 'package:lms_app/services/firebase_service.dart';
 import 'package:lms_app/screens/tabs/search_tab/popular_tags.dart';
 import 'package:lms_app/utils/next_screen.dart';
-import '../../../models/category.dart';
 import '../../../providers/app_settings_provider.dart';
+import '../../../providers/api_category_provider.dart';
+import '../../search/api_search_view.dart';
 import 'categories_layout2.dart';
 
 final searchTagsProvider = FutureProvider<List<Tag>>((ref) async {
@@ -16,18 +17,15 @@ final searchTagsProvider = FutureProvider<List<Tag>>((ref) async {
   return tags;
 });
 
-final categoriesProvider = FutureProvider<List<Category>>((ref) async {
-  final List<Category> categories = await FirebaseService().getAllCategories();
-  return categories;
-});
-
 class SearchTab extends ConsumerWidget {
   const SearchTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("🔍 [LOG] SearchTab opened");
+
     final tags = ref.watch(searchTagsProvider);
-    final categories = ref.watch(categoriesProvider);
+    final categories = ref.watch(allCategoriesProvider);
     final settings = ref.watch(appSettingsProvider);
 
     return Scaffold(
@@ -35,7 +33,10 @@ class SearchTab extends ConsumerWidget {
         titleSpacing: 0,
         toolbarHeight: 60,
         title: InkWell(
-          onTap: () => NextScreen.iOS(context, const SearchScreen()),
+          onTap: () {
+            print("User tapped search bar, navigating to ApiSearchScreen...");
+            NextScreen.iOS(context, const ApiSearchScreen());
+          },
           child: Container(
             margin: const EdgeInsets.all(20),
             alignment: Alignment.center,
@@ -61,7 +62,8 @@ class SearchTab extends ConsumerWidget {
       body: RefreshIndicator.adaptive(
         onRefresh: () async {
           ref.invalidate(searchTagsProvider);
-          ref.invalidate(categoriesProvider);
+          ref.invalidate(allCategoriesProvider);
+          print("Refreshing categories and tags...");
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -81,3 +83,4 @@ class SearchTab extends ConsumerWidget {
     );
   }
 }
+

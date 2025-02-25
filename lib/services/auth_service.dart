@@ -6,11 +6,10 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import '../models/api_user_model.dart';
 
 class AuthService {
-  final String baseUrl = "http://10.0.2.2:8080/api/auth"; // 🔹 Thay URL backend nếu cần
+  final String baseUrl = "http://10.0.2.2:8080/api/auth";
 
   final storage = FlutterSecureStorage();
 
-  /// 📌 **Đăng nhập với email & password**
   Future<Map<String, dynamic>?> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
@@ -26,7 +25,6 @@ class AuthService {
       await storage.write(key: "accountId", value: data["accountId"].toString());
       await storage.write(key: "studentId", value: data["studentId"].toString());
 
-      // ✅ Lưu ROLE vào storage
       List roles = data["roles"] ?? [];
       await storage.write(key: "role", value: jsonEncode(roles));
 
@@ -35,7 +33,6 @@ class AuthService {
       return null;
     }
   }
-
 
   Future<bool> register(String username, String email, String password) async {
     final response = await http.post(
@@ -52,23 +49,22 @@ class AuthService {
     return response.statusCode == 200;
   }
 
-  /// 📌 **Lấy thông tin user từ studentId**
   Future<ApiUserModel?> fetchUser(int studentId) async {
-    final String url = "http://10.0.2.2:8080/api/students/$studentId"; // 🔹 API lấy user theo studentId
-    final token = await getToken(); // 🔹 Lấy token từ storage
+    final String url = "http://10.0.2.2:8080/api/students/$studentId";
+    final token = await getToken();
 
     if (token == null) {
-      print("❌ [AuthService] - Không có token, không thể fetch user");
+      print("[AuthService] -No token, can't fetch user");
       return null;
     }
 
-    print("📡 [AuthService] - Fetching user từ API: $url với token: $token");
+    print("[AuthService] - Fetching user from API: $url với token: $token");
 
     final response = await http.get(
       Uri.parse(url),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer $token", // 🔹 Gửi token trong header
+        "Authorization": "Bearer $token",
       },
     );
 
@@ -77,16 +73,13 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
-      return ApiUserModel.fromJson(data); // ✅ Convert JSON -> ApiUserModel
+      return ApiUserModel.fromJson(data);
     } else {
-      print("❌ [AuthService] - Lỗi khi fetch user: ${response.body}");
+      print("❌ [AuthService] - Error fetch user: ${response.body}");
       return null;
     }
   }
 
-
-
-  /// 📌 **Đăng ký khóa học**
   Future<bool> enrollCourse(String userId, String courseId) async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:8080/api/courses/enroll'),
@@ -94,40 +87,35 @@ class AuthService {
       body: jsonEncode({"userId": userId, "courseId": courseId}),
     );
 
-
     return response.statusCode == 200;
   }
 
-  /// 📌 **Đăng xuất (Xóa token)**
   Future<void> logout() async {
     await storage.delete(key: "token");
   }
 
-  /// 📌 **Lấy token từ storage & kiểm tra hết hạn**
   Future<String?> getToken() async {
     String? token = await storage.read(key: "token");
 
     if (token == null) {
-      print("❌ Không tìm thấy token, yêu cầu đăng nhập lại.");
+      print("Token not found, please login again.");
       return null;
     }
 
     if (JwtDecoder.isExpired(token)) {
-      print("❌ Token đã hết hạn, yêu cầu đăng nhập lại.");
-      await logout(); // 🔹 Xóa token và bắt đăng nhập lại
+      print("Token has expired, please log in again.");
+      await logout();
       return null;
     }
 
     return token;
   }
 
-  /// 📌 **Kiểm tra xem user đã đăng nhập chưa**
   Future<bool> isLoggedIn() async {
     final token = await getToken();
     return token != null;
   }
 
-  /// 📌 **Xóa tài khoản người dùng**
   Future<bool> deleteUserAuth(String userId) async {
     final response = await http.delete(
       Uri.parse('$baseUrl/delete/$userId'),
@@ -137,14 +125,11 @@ class AuthService {
     return response.statusCode == 200;
   }
 
-  /// 📌 **Đăng xuất**
   Future<void> userLogOut() async {
     await storage.delete(key: "token");
   }
 
-  /// 📌 **Đăng xuất Google (Nếu có)**
   Future<void> googleLogout() async {
-    // Nếu không dùng Google Auth, có thể bỏ qua
     print("Google logout called");
   }
 }

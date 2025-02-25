@@ -1,9 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_app/models/course_dto.dart';
-import 'package:lms_app/screens/course_details.dart/api_details_view.dart'; // ✅ Sử dụng API-based CourseDetailsView
-import 'package:lms_app/utils/next_screen.dart';
 import 'rating_bar.dart';
 
 class ApiHorizontalCourseTile extends StatelessWidget {
@@ -14,7 +10,7 @@ class ApiHorizontalCourseTile extends StatelessWidget {
     required this.imageHeight,
   });
 
-  final CourseDTO courseDTO; // ✅ Dùng CourseDTO thay vì Course
+  final CourseDTO courseDTO;
   final double widthPercentage;
   final double imageHeight;
 
@@ -25,7 +21,7 @@ class ApiHorizontalCourseTile extends StatelessWidget {
     return InkWell(
       // onTap: () => NextScreen.iOS(
       //   context,
-      //   ApiDetailsView(courseDTO: courseDTO, heroTag: heroTag), // ✅ Sử dụng ApiDetailsView thay vì CourseDetailsView
+      //   ApiDetailsView(courseDTO: courseDTO, heroTag: heroTag),
       // ),
       child: Container(
         width: MediaQuery.of(context).size.width * widthPercentage,
@@ -43,10 +39,10 @@ class ApiHorizontalCourseTile extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(
-                        courseDTO.imageCover, // ✅ Kiểm tra với Image.network
+                        courseDTO.imageCover,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          print("Error loading image: $error"); // ✅ Debug lỗi
+                          print("Error loading image: $error");
                           return Image.asset('assets/images/placeholder.png', fit: BoxFit.cover);
                         },
                       ),
@@ -58,23 +54,23 @@ class ApiHorizontalCourseTile extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              courseDTO.titleCourse, // ✅ Dùng titleCourse từ CourseDTO
+              courseDTO.titleCourse,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 3),
             Text(
-              '${courseDTO.instructorFirstName} ${courseDTO.instructorLastName}', // ✅ Hiển thị instructor
+              '${courseDTO.instructorFirstName} ${courseDTO.instructorLastName}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 3),
             Text(
-              courseDTO.categoryName, // ✅ Hiển thị danh mục
+              courseDTO.categoryName,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.blueGrey),
             ),
             const SizedBox(height: 3),
-            const RatingViewer(rating: 4.5), // ✅ Hiện tại rating chưa có trong API
+            const RatingViewer(rating: 4.5),
           ],
         ),
       ),

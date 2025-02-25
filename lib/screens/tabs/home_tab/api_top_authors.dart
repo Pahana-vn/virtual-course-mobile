@@ -29,7 +29,7 @@ class ApiTopAuthors extends ConsumerWidget {
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       TextButton(
-                        onPressed: () {}, // TODO: Thêm màn hình hiển thị tất cả instructors
+                        onPressed: () {},
                         style: TextButton.styleFrom(padding: EdgeInsets.zero),
                         child: const Text('View All'),
                       ),

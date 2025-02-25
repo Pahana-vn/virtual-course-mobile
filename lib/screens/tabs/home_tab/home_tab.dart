@@ -5,10 +5,10 @@ import 'package:line_icons/line_icons.dart';
 import 'package:lms_app/components/app_logo.dart';
 import 'package:lms_app/screens/tabs/home_tab/top_authors.dart';
 import 'package:lms_app/screens/notifications/notifications.dart';
-import 'package:lms_app/screens/search/search_view.dart';
 import 'package:lms_app/screens/wishlist.dart';
 import 'package:lms_app/utils/next_screen.dart';
 import '../../../providers/app_settings_provider.dart';
+import '../../search/api_search_view.dart';
 import 'api_category1_courses.dart';
 import 'api_category2_courses.dart';
 import 'api_category3_courses.dart';
@@ -55,7 +55,7 @@ class HomeTab extends ConsumerWidget {
               IconButton(
                 // style: IconButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                 onPressed: () {
-                  NextScreen.iOS(context, const SearchScreen());
+                  NextScreen.iOS(context, const ApiSearchScreen());
                 },
                 icon: const Icon(FeatherIcons.search, size: 22),
               ),

@@ -7,7 +7,6 @@ class ApiQuizService {
   final String baseUrl = 'http://10.0.2.2:8080/api/questions';
   final storage = FlutterSecureStorage();
 
-  /// Lấy danh sách câu hỏi của bài kiểm tra
   Future<List<QuestionDTO>> fetchQuestionsByTest(int testId) async {
     try {
       final token = await storage.read(key: "token");
@@ -30,7 +29,7 @@ class ApiQuizService {
         throw Exception('Failed to load questions for test ID: $testId');
       }
     } catch (e) {
-      throw Exception('❌ Lỗi khi gọi API fetchQuestionsByTest: $e');
+      throw Exception('Error when calling fetchQuestionsByTest API: $e');
     }
   }
 }
